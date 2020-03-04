@@ -10,9 +10,9 @@
 #    docs.serverless.com
 #
 # Happy Coding!
-service: my-first-service
+service: sentiment-service
 # app and org for use with dashboard.serverless.com
-app: my-first-app
+app: sentiment-app
 org: lucyco
 
 # You can pin your service to only deploy with a specific Serverless version
@@ -60,11 +60,11 @@ outputs:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  sentiment:
+    handler: handler.sentiment
     events:
       - http:
-          path: hello
+          path: sentiment
           method: get
           cors: true
 #    The following are a few example events you can configure
