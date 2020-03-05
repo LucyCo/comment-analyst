@@ -1,0 +1,10 @@
+{
+  "name": "my-first-app",
+  "version": "1.0.0",
+  "description": "my first app",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "serverless-python-requirements": "^2.4.1"
+  }
+}
