@@ -1,6 +1,6 @@
 import json
 from serverless_sdk import tag_event
-import requests
+# import requests
 # from statistics import mean, median
 # from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
