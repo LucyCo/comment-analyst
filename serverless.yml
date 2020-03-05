@@ -10,27 +10,27 @@
 #    docs.serverless.com
 #
 # Happy Coding!
-service: sentiment-service
+service: my-first-service
 # app and org for use with dashboard.serverless.com
-app: sentiment-app
+app: my-first-app
 org: lucyco
 
-# You can pin your service to only deploy with a specific Serverless version
+ # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
-provider:
+ provider:
   name: aws
   runtime: python3.7
 
-outputs:
+ outputs:
   custom-output: any-value-here
 
-# you can overwrite defaults here
+ # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
+ # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
 #      Action:
@@ -46,11 +46,11 @@ outputs:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
 
-# you can define service wide environment variables here
+ # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
 
-# you can add packaging information here
+ # you can add packaging information here
 #package:
 #  include:
 #    - include-me.py
@@ -59,8 +59,8 @@ outputs:
 #    - exclude-me.py
 #    - exclude-me-dir/**
 
-functions:
-  sentiment:
+ functions:
+  hello:
     handler: handler.hello
     events:
       - http:
@@ -103,11 +103,11 @@ functions:
 #            host: example.com
 #            path: /hello
 
-#    Define function environment variables here
+ #    Define function environment variables here
 #    environment:
 #      variable2: value2
 
-# you can add CloudFormation resource templates here
+ # you can add CloudFormation resource templates here
 #resources:
 #  Resources:
 #    NewResource:
