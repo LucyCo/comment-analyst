@@ -1,8 +1,8 @@
 import json
 from serverless_sdk import tag_event
 import requests
-from statistics import mean, median
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+# from statistics import mean, median
+# from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 def hello(event, context):
