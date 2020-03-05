@@ -2,8 +2,8 @@ import json
 from serverless_sdk import tag_event
 
 
- def hello(event, context):
-   tag_event('custom-tag', 'hello-world', {'custom': {'tag': 'data '}})
+def hello(event, context):
+    tag_event('custom-tag', 'hello-world', {'custom': {'tag': 'data '}})
 
     headers = {
         "Access-Control-Allow-Origin": "*",
@@ -23,7 +23,7 @@ from serverless_sdk import tag_event
 
     return response
 
-     # Use this code if you don't use the http event with the LAMBDA-PROXY
+    # Use this code if you don't use the http event with the LAMBDA-PROXY
     # integration
     """
     return {
