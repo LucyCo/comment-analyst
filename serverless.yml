@@ -24,7 +24,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: python2.7
+  runtime: python3.7
 
 outputs:
   custom-output: any-value-here
