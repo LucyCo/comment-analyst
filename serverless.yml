@@ -19,6 +19,9 @@ org: lucyco
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+plugins:
+  - serverless-python-requirements
+
 provider:
  name: aws
  runtime: python3.7
