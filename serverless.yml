@@ -23,7 +23,7 @@ org: lucyco
 frameworkVersion: ">=1.1.0 <2.0.0"
 provider:
   name: aws
-  runtime: python3.6
+  runtime: python3.7
 
 outputs:
   custom-output: any-value-here
