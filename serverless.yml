@@ -19,9 +19,6 @@ org: lucyco
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
-plugins:
-  - serverless-python-requirements
-
 
 frameworkVersion: ">=1.1.0 <2.0.0"
 provider:
@@ -123,3 +120,8 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+plugins:
+  - serverless-python-requirements
+
+
