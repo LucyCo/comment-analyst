@@ -23,7 +23,7 @@ def sentiment(pharse):
        "Access-Control-Allow-Credentials": True
   }
 
-  body = run()
+  body = run(phrase)
 
   if body is None:
     body = "Internal error!"
