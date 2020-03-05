@@ -1,8 +1,10 @@
 {
-  "name": "openwhisk-python-simple-http-endpoint",
+  "name": "sentiment-service",
   "version": "0.1.0",
-  "description": "Example demonstrates how to setup a simple HTTP GET endpoint with OpenWhisk.",
+  "description": "Sentiment calculator for comments in Hacker News.",
   "dependencies": {
-    "serverless-openwhisk": ">=0.13.0"
+    "vaderSentiment": "3.2.1",
+    "requests": "2.23.0",
+    "statistics": "1.0.3.5"
   }
 }
