@@ -2,4 +2,4 @@ requests
 json
 serverless_sdk
 statistics
-vaderSentiment
+vaderSentiment.vaderSentiment
