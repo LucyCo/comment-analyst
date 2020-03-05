@@ -19,12 +19,12 @@ org: lucyco
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
- provider:
-  name: aws
-  runtime: python3.7
+provider:
+ name: aws
+ runtime: python3.7
 
- outputs:
-  custom-output: any-value-here
+outputs:
+ custom-output: any-value-here
 
  # you can overwrite defaults here
 #  stage: dev
@@ -59,14 +59,14 @@ org: lucyco
 #    - exclude-me.py
 #    - exclude-me-dir/**
 
- functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: get
-          cors: true
+functions:
+ hello:
+   handler: handler.hello
+   events:
+     - http:
+         path: hello
+         method: get
+         cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
