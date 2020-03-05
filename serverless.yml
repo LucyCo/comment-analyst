@@ -61,10 +61,10 @@ outputs:
 
 functions:
   sentiment:
-    handler: handler.sentiment
+    handler: handler.hello
     events:
       - http:
-          path: sentiment
+          path: hello
           method: get
           cors: true
 #    The following are a few example events you can configure
