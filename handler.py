@@ -1,28 +1,27 @@
-
 import json
 from serverless_sdk import tag_event
 
 
  def hello(event, context):
-    tag_event('custom-tag', 'hello-world', {'custom': {'tag': 'data '}})
+   tag_event('custom-tag', 'hello-world', {'custom': {'tag': 'data '}})
 
-     headers = {
+    headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": True
     }
 
-     body = {
+    body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": event
     }
 
-     response = {
+    response = {
         "statusCode": 200,
         "headers": headers,
         "body": json.dumps(body)
     }
 
-     return response
+    return response
 
      # Use this code if you don't use the http event with the LAMBDA-PROXY
     # integration
