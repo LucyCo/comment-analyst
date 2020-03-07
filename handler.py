@@ -1,12 +1,21 @@
-from urllib import request
+import requests
 import json
 from serverless_sdk import tag_event
+from statistics import mean, median
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-POSITIVE_WORDS = ['good', 'great', 'happy']
-NEGATIVE_WORDS = ['bad', 'terrible', 'sad']
+analyzer = SentimentIntensityAnalyzer()
 
+stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
 
-def hello(event, context):
+querystring = {"print":"pretty"}
+
+headers = {
+     'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
+     'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
+    }
+
+def sentiment(pharse):
   tag_event('comment-analyst', 'sentiment')
 
   headers = {
@@ -14,11 +23,13 @@ def hello(event, context):
        "Access-Control-Allow-Credentials": True
   }
 
-  phrase = event.get('queryStringParameters', {}).get('phrase')
   try:
-      body = run(phrase)
+    body = run(pharse)
   except Exception as exc:
-      body = 'error: ' + str(exc)
+    body = {"error", str(exc)}
+
+  if body is None:
+    body = "Internal error!"
 
   response = {
       "statusCode": 200,
@@ -27,51 +38,23 @@ def hello(event, context):
   }
   return response
 
-def mean(values):
-  return sum(values) / len(values)
 
-def median(values):
-  if len(values) == 0:
-    return None
-
-  return sorted(values)[int(len(values) / 2)]
-
-def make_request(url):
-  req =  request.Request('https://hacker-news.firebaseio.com/v0/item/8863.json')
-  req.add_header('x-rapidapi-host', "community-hacker-news-v1.p.rapidapi.com")
-  req.add_header('x-rapidapi-key', "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13")
-
-  response = request.urlopen(req)
-  return json.loads(response.read())
-
-def get_sentiment(text):
-  words = text.split(' ')
-  total = float(len(words))
-  positive = len([word for word in words if word in POSITIVE_WORDS])
-  negative = len([word for word in words if word in NEGATIVE_WORDS])
-  neutral = len(words) - (positive + negative)
-  compound = min(positive, negative)
-  return {
-    'pos': positive / total,
-    'neg': negative / total,
-    'neu': neutral / total,
-    'compound': compound / total
-  }
-
-stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
-
-
-
-
-def run(phrase):
+def run(pharse):
   url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
-  storyIdList = make_request(url)
+  response = requests.request("GET", url, headers=headers, params=querystring)
+
+  #error check
+  if response.status_code >= 300 or response.status_code < 200:
+      print('Connection to Hacker News failed - error code', response.status_code)
+
+  storyIdList = response.json()
 
   for storyId in storyIdList:
     url = "https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json"
-    story = make_request(url)
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    story = response.json()
     print(story.get("title"))
-    if story.get("title").find(phrase) != -1:
+    if story.get("title").find(pharse) != -1:
       for commentId in story["kids"]:
         commentTraverse(commentId)
 
@@ -88,16 +71,17 @@ def run(phrase):
 
 
 def updateSentiments(text):
-  result = get_sentiment(text)
-  stats["positive"].append(result["pos"])
-  stats["negative"].append(result["neg"])
-  stats["neutral"].append(result["neu"])
-  stats["mixed"].append(result["compound"])
+    result = analyzer.polarity_scores(text)
+    stats["positive"].append(result["pos"])
+    stats["negative"].append(result["neg"])
+    stats["neutral"].append(result["neu"])
+    stats["mixed"].append(result["compound"])
 
 
 def commentTraverse(commentId):
   url = "https://community-hacker-news-v1.p.rapidapi.com/item/" + str(commentId) + ".json"
-  comment = make_request(url)
+  response = requests.request("GET", url, headers=headers, params=querystring)
+  comment = response.json()
   kids = comment.get('kids')
   if kids is None:
     updateSentiments(str(comment.get('text')))

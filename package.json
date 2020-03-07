@@ -1,0 +1,20 @@
+{
+  "name": "serverless-project",
+  "version": "0.0.1",
+  "description": "new serverless project",
+  "scripts": {
+    "start": "sls offline start",
+    "deploy": "sls deploy",
+    "deploy:one": "sls deploy function -f ",
+    "logs": "sls logs -f "
+  },
+  "author": "Nir Adler",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-offline": "^3.33.0",
+    "serverless": "^1.40.0"
+  },
+  "dependencies": {
+    "serverless-python-requirements": "^5.1.0"
+  }
+}
