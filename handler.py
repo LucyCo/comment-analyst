@@ -2,6 +2,10 @@ from urllib import request
 import json
 from serverless_sdk import tag_event
 
+POSITIVE_WORDS = ['good', 'great', 'happy']
+NEGATIVE_WORDS = ['bad', 'terrible', 'sad']
+
+
 def hello(event, context):
   tag_event('comment-analyst', 'sentiment')
 
@@ -38,7 +42,18 @@ def make_request(url):
   return json.loads(response.read())
 
 def get_sentiment(text):
-  return {'pos': 0.3, 'neg': '0.4', 'neu': 0.5, 'compound': 0.6} # todo
+  words = text.split(' ')
+  total = len(words)
+  positive = len(word for word in text if word in POSITIVE_WORDS)
+  negative = len(word for word in text if word in NEGATIVE_WORDS)
+  neutral = len(words) - (positive + negative)
+  compound = min(positive, negative)
+  return {
+    'pos': positive / total,
+    'neg': negative / total,
+    'neu': neutral / total,
+    'compound': compound / total
+  }
 
 stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
 
