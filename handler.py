@@ -1,8 +1,12 @@
 import json
 from serverless_sdk import tag_event
 import requests
-# from statistics import mean, median
-# from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+
+def make_request(url):
+    req =  request.Request('https://hacker-news.firebaseio.com/v0/item/8863.json')
+    response = request.urlopen(req)
+    return json.loads(response.read())
 
 
 def hello(event, context):
@@ -13,10 +17,7 @@ def hello(event, context):
         "Access-Control-Allow-Credentials": True
     }
 
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
-    }
+    body = make_request('https://hacker-news.firebaseio.com/v0/topstories.json')
 
     response = {
         "statusCode": 200,
