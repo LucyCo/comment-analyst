@@ -17,7 +17,7 @@ headers = {
 
 def sentiment(event, context):
   tag_event('comment-analyst', 'sentiment')
-  phrase = 'python' # todo
+  phrase = event.get('queryStringParameters', {}).get('phrase')
 
   headers = {
        "Access-Control-Allow-Origin": "*",
