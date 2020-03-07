@@ -2,6 +2,27 @@ from urllib import request
 import json
 from serverless_sdk import tag_event
 
+def hello(params):
+  tag_event('comment-analyst', 'sentiment')
+
+  headers = {
+       "Access-Control-Allow-Origin": "*",
+       "Access-Control-Allow-Credentials": True
+  }
+
+  #try:
+  #    body = run('is') # todo
+  #except Exception as exc:
+  #    body = 'todo error: ' + str(exc)
+  body = params # todo
+
+  response = {
+      "statusCode": 200,
+       "headers": headers,
+       "body": json.dumps(body)
+  }
+  return response
+
 def mean(values):
   return sum(values) / len(values)
 
@@ -25,29 +46,6 @@ headers = {
   'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
   'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
 }
-
-def hello(event, context):
-  tag_event('comment-analyst', 'sentiment')
-
-  headers = {
-       "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Credentials": True
-  }
-
-  try:
-      body = run()
-  except Exception as exc:
-      body = 'todo error: ' + str(exc)
-
-  if body is None:
-    body = "Internal error!"
-
-  response = {
-      "statusCode": 200,
-       "headers": headers,
-       "body": json.dumps(body)
-  }
-  return response
 
 
 def run(phrase):
