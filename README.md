@@ -11,7 +11,7 @@ handler.py event function resposible for running the logic behind
 # Usage
 Example: https://nnccmexb6l.execute-api.us-east-1.amazonaws.com/dev/sentiment?phrase=down
 where sentiment is the called function
-phrase is the text to be searched in titles
+phrase is the text to be searched in titles -
 
 # Requirements
 requests
