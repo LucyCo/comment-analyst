@@ -10,14 +10,11 @@ def hello(event, context):
        "Access-Control-Allow-Credentials": True
   }
 
-  #try:
-  #    body = run('is') # todo
-  #except Exception as exc:
-  #    body = 'todo error: ' + str(exc)
+  phrase = event.get('queryStringParameters', {}).get('phrase')
   try:
-    body = event['queryStringParameters'] # params.get('bla', 'bladefault') # todo
+      body = run(phrase)
   except Exception as exc:
-    body = str(exc)
+      body = 'todo error: ' + str(exc)
 
   response = {
       "statusCode": 200,
