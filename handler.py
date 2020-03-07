@@ -45,7 +45,7 @@ def run(pharse):
 
   #error check
   if response.status_code >= 300 or response.status_code < 200:
-      print('Connection to Hacker News failed - error code', response.status_code)
+    print('Connection to Hacker News failed - error code', response.status_code)
 
   storyIdList = response.json()
 
@@ -65,17 +65,17 @@ def run(pharse):
       dict = {
         'avg':mean(stats[attr]),
         'median':median(stats[attr])
-        }
+      }
       output[attr] = dict
   return output
 
 
 def updateSentiments(text):
-    result = analyzer.polarity_scores(text)
-    stats["positive"].append(result["pos"])
-    stats["negative"].append(result["neg"])
-    stats["neutral"].append(result["neu"])
-    stats["mixed"].append(result["compound"])
+  result = analyzer.polarity_scores(text)
+  stats["positive"].append(result["pos"])
+  stats["negative"].append(result["neg"])
+  stats["neutral"].append(result["neu"])
+  stats["mixed"].append(result["compound"])
 
 
 def commentTraverse(commentId):
