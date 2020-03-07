@@ -3,18 +3,18 @@ import json
 #from serverless_sdk import tag_event
 
 def mean(values):
-    return sum(values) / len(values)
+  return sum(values) / len(values)
 
 def median(values):
-    if len(values) == 0:
-        return None
+  if len(values) == 0:
+    return None
 
-    return sorted(values)[int(len(values) / 2)]
+  return sorted(values)[int(len(values) / 2)]
 
 def make_request(url):
-    req =  request.Request('https://hacker-news.firebaseio.com/v0/item/8863.json')
-    response = request.urlopen(req)
-    return json.loads(response.read())
+  req =  request.Request('https://hacker-news.firebaseio.com/v0/item/8863.json')
+  response = request.urlopen(req)
+  return json.loads(response.read())
 
 def get_sentiment(text):
   return {'pos': 0.3, 'neg': '0.4', 'neu': 0.5, 'compound': 0.6} # todo
@@ -22,9 +22,9 @@ def get_sentiment(text):
 stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
 
 headers = {
-     'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
-     'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
-    }
+  'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
+  'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
+}
 
 def sentiment(pharse):
   #tag_event('comment-analyst', 'sentiment')
@@ -77,11 +77,11 @@ def run(pharse):
 
 
 def updateSentiments(text):
-    result = get_sentiment(text)
-    stats["positive"].append(result["pos"])
-    stats["negative"].append(result["neg"])
-    stats["neutral"].append(result["neu"])
-    stats["mixed"].append(result["compound"])
+  result = get_sentiment(text)
+  stats["positive"].append(result["pos"])
+  stats["negative"].append(result["neg"])
+  stats["neutral"].append(result["neu"])
+  stats["mixed"].append(result["compound"])
 
 
 def commentTraverse(commentId):
