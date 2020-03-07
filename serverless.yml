@@ -13,6 +13,7 @@ functions:
 
 provider:
   name: aws
+  timeout: 120
   runtime: python3.8
 
 plugins:
