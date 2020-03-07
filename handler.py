@@ -2,7 +2,7 @@ from urllib import request
 import json
 from serverless_sdk import tag_event
 
-def hello(event):
+def hello(event, context):
   tag_event('comment-analyst', 'sentiment')
 
   headers = {
@@ -14,11 +14,10 @@ def hello(event):
   #    body = run('is') # todo
   #except Exception as exc:
   #    body = 'todo error: ' + str(exc)
-  #try:
-  #  body = json.dumps(event) # params.get('bla', 'bladefault') # todo
-  #except Exception as exc:
-  #  body = str(exc)
-  body = '???'
+  try:
+    body = json.dumps(event) # params.get('bla', 'bladefault') # todo
+  except Exception as exc:
+    body = str(exc)
 
   response = {
       "statusCode": 200,
