@@ -42,7 +42,7 @@ def sentiment(event, context):
 
 def run(phrase):
   url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
-  response = requests.request("GET", url, headers=headers, params=querystring)
+  response = requests.request("GET", url, headers=headers, params=querystring)[:10] # todo
 
   #error check
   if response.status_code >= 300 or response.status_code < 200:
