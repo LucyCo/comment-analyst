@@ -1,6 +1,8 @@
+from urllib import request
 import json
 from serverless_sdk import tag_event
 
+# 3b22b8fc5b8ace713086f2bf8796c65b9a4a287c~17
 
 def make_request(url):
     req =  request.Request('https://hacker-news.firebaseio.com/v0/item/8863.json')
