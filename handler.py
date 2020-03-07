@@ -66,7 +66,6 @@ stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
 def run(phrase):
   url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
   storyIdList = make_request(url)
-  return storyIdList # todo test
 
   for storyId in storyIdList:
     url = "https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json"
