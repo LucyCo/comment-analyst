@@ -17,7 +17,10 @@ def hello(event, context):
         "Access-Control-Allow-Credentials": True
     }
 
-    body = make_request('https://hacker-news.firebaseio.com/v0/topstories.json')
+    try:
+        body = make_request('https://hacker-news.firebaseio.com/v0/topstories.json')
+    except:
+        body = 'todo-error'
 
     response = {
         "statusCode": 200,
