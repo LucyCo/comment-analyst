@@ -1,6 +1,5 @@
 import json
 from serverless_sdk import tag_event
-import requests
 
 
 def make_request(url):
