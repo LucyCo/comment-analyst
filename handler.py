@@ -47,7 +47,7 @@ def make_request(url):
 
 def get_sentiment(text):
   words = text.split(' ')
-  total = len(words)
+  total = float(len(words))
   positive = len([word for word in text if word in POSITIVE_WORDS])
   negative = len([word for word in text if word in NEGATIVE_WORDS])
   neutral = len(words) - (positive + negative)
