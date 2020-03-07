@@ -18,8 +18,8 @@ def hello(event, context):
 
     try:
         body = make_request('https://hacker-news.firebaseio.com/v0/topstories.json')
-    except:
-        body = 'todo-error'
+    except Exception as exc:
+        body = 'todo-error: ' + str(exc)
 
     response = {
         "statusCode": 200,
