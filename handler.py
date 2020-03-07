@@ -14,7 +14,7 @@ def hello(event):
   #    body = run('is') # todo
   #except Exception as exc:
   #    body = 'todo error: ' + str(exc)
-  body = event  # params.get('bla', 'bladefault') # todo
+  body = event['data']  # params.get('bla', 'bladefault') # todo
 
   response = {
       "statusCode": 200,
