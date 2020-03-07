@@ -8,7 +8,7 @@ analyzer = SentimentIntensityAnalyzer()
 
 stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
 
-querystring = {"print":"pretty"}
+querystring = {}
 
 headers = {
      'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
