@@ -19,6 +19,7 @@ def hello(event, context):
       body = run(phrase)
   except Exception as exc:
       body = 'error: ' + str(exc)
+  body = get_sentiment("all good and bad things are great") # todo
 
   response = {
       "statusCode": 200,
