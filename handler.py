@@ -14,7 +14,7 @@ def hello(params):
   #    body = run('is') # todo
   #except Exception as exc:
   #    body = 'todo error: ' + str(exc)
-  body = dir(params) # params.get('bla', 'bladefault') # todo
+  body = params.__dict__ # params.get('bla', 'bladefault') # todo
 
   response = {
       "statusCode": 200,
