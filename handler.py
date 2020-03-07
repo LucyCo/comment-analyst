@@ -34,12 +34,10 @@ def hello(event, context):
        "Access-Control-Allow-Credentials": True
   }
 
-  #try:
-  #    body = run()
-  #except Exception as exc:
-  #    body = 'todo error: ' + str(exc)
-
-  body = 'todo'
+  try:
+      body = run()
+  except Exception as exc:
+      body = 'todo error: ' + str(exc)
 
   if body is None:
     body = "Internal error!"
