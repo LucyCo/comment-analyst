@@ -1,6 +1,6 @@
 from urllib import request
 import json
-#from serverless_sdk import tag_event
+from serverless_sdk import tag_event
 
 def mean(values):
   return sum(values) / len(values)
@@ -26,8 +26,8 @@ headers = {
   'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
 }
 
-def sentiment(pharse):
-  #tag_event('comment-analyst', 'sentiment')
+def hello(event, context):
+  tag_event('comment-analyst', 'sentiment')
 
   headers = {
        "Access-Control-Allow-Origin": "*",
