@@ -15,8 +15,9 @@ headers = {
      'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
     }
 
-def sentiment(pharse):
+def sentiment(event, context):
   tag_event('comment-analyst', 'sentiment')
+  phrase = 'python' # todo
 
   headers = {
        "Access-Control-Allow-Origin": "*",
@@ -24,7 +25,7 @@ def sentiment(pharse):
   }
 
   try:
-    body = run(pharse)
+    body = run(phrase)
   except Exception as exc:
     body = {"error", str(exc)}
 
@@ -39,7 +40,7 @@ def sentiment(pharse):
   return response
 
 
-def run(pharse):
+def run(phrase):
   url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
   response = requests.request("GET", url, headers=headers, params=querystring)
 
@@ -54,7 +55,7 @@ def run(pharse):
     response = requests.request("GET", url, headers=headers, params=querystring)
     story = response.json()
     print(story.get("title"))
-    if story.get("title").find(pharse) != -1:
+    if story.get("title").find(phrase) != -1:
       for commentId in story["kids"]:
         commentTraverse(commentId)
 
