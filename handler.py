@@ -1,6 +1,6 @@
 from urllib import request
 import json
-from serverless_sdk import tag_event
+#from serverless_sdk import tag_event
 
 def mean(values):
     return sum(values) / len(values)
@@ -27,17 +27,19 @@ headers = {
     }
 
 def sentiment(pharse):
-  tag_event('comment-analyst', 'sentiment')
+  #tag_event('comment-analyst', 'sentiment')
 
   headers = {
        "Access-Control-Allow-Origin": "*",
        "Access-Control-Allow-Credentials": True
   }
 
-  try:
-      body = run()
-  except Exception as exc:
-      body = 'todo error: ' + str(exc)
+  #try:
+  #    body = run()
+  #except Exception as exc:
+  #    body = 'todo error: ' + str(exc)
+
+  body = 'todo'
 
   if body is None:
     body = "Internal error!"
