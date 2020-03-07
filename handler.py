@@ -14,7 +14,10 @@ def hello(event):
   #    body = run('is') # todo
   #except Exception as exc:
   #    body = 'todo error: ' + str(exc)
-  body = str(type(event))  # params.get('bla', 'bladefault') # todo
+  try:
+      body = json.dumps(event) # params.get('bla', 'bladefault') # todo
+  except Exception as exc:
+      body = str(exc)
 
   response = {
       "statusCode": 200,
