@@ -15,7 +15,7 @@ def hello(event, context):
   #except Exception as exc:
   #    body = 'todo error: ' + str(exc)
   try:
-    body = json.dumps(event) # params.get('bla', 'bladefault') # todo
+    body = event['queryStringParameters'] # params.get('bla', 'bladefault') # todo
   except Exception as exc:
     body = str(exc)
 
