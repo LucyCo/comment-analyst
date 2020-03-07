@@ -50,7 +50,7 @@ def hello(event, context):
   return response
 
 
-def run(pharse):
+def run(phrase):
   url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
   storyIdList = make_request(url)
 
@@ -58,7 +58,7 @@ def run(pharse):
     url = "https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json"
     story = make_request(url)
     print(story.get("title"))
-    if story.get("title").find(pharse) != -1:
+    if story.get("title").find(phrase) != -1:
       for commentId in story["kids"]:
         commentTraverse(commentId)
 
