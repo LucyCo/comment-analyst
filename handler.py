@@ -18,7 +18,7 @@ def hello(event, context):
   try:
       body = run(phrase)
   except Exception as exc:
-      body = 'todo error: ' + str(exc)
+      body = 'error: ' + str(exc)
 
   response = {
       "statusCode": 200,
@@ -38,6 +38,9 @@ def median(values):
 
 def make_request(url):
   req =  request.Request('https://hacker-news.firebaseio.com/v0/item/8863.json')
+  req.add_header('x-rapidapi-host', "community-hacker-news-v1.p.rapidapi.com")
+  req.add_header('x-rapidapi-key', "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13")
+
   response = request.urlopen(req)
   return json.loads(response.read())
 
@@ -57,10 +60,7 @@ def get_sentiment(text):
 
 stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
 
-headers = {
-  'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
-  'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
-}
+
 
 
 def run(phrase):
