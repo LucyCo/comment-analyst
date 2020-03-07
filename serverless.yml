@@ -2,6 +2,7 @@ service: sentiment-service
 
 functions:
   sentiment:
+    timeout: 120
     description: comment sentiment analyzer
     handler: handler.sentiment
     events:
