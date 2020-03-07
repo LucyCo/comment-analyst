@@ -34,7 +34,10 @@ def sentiment(pharse):
        "Access-Control-Allow-Credentials": True
   }
 
-  body = run()
+  try:
+      body = run()
+  except Exception as exc:
+      body = 'todo error: ' + str(exc)
 
   if body is None:
     body = "Internal error!"
