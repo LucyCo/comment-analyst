@@ -16,8 +16,7 @@ def hello(event, context):
 
   phrase = event.get('queryStringParameters', {}).get('phrase')
   try:
-      # body = run(phrase)
-      body = get_sentiment("all good and bad things are great")
+      body = run(phrase)
   except Exception as exc:
       body = 'error: ' + str(exc)
 
