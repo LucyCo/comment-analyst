@@ -59,7 +59,7 @@ def sentiment(event, context):
 
 def run(phrase):
     url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
-    results = loop.run_until_complete(fetch_url(url))
+    results = loop.run_until_complete(fetch_single_url(url))
     storyIdList = response.json()
 
     for storyId in storyIdList:
@@ -106,4 +106,3 @@ def getComments(commentIds):
     for comment in result:
         updateSentiments(comment["text"])
         getComments(comment["kids"])
-
