@@ -69,20 +69,20 @@ def run(pharse):
     allDirectStoryKidsId = [];
 
     for story in results:
-      if story.get("title").find(pharse) != -1 and story.get("kids") is not None:
-          for commentId in story.get("kids"):
-            allDirectStoryKidsId.append(commentId)
+        if story.get("title").find(pharse) != -1 and story.get("kids") is not None:
+            for commentId in story.get("kids"):
+                allDirectStoryKidsId.append(commentId)
 
     getComments(allDirectStoryKidsId)
 
     sum = len(stats["positive"])
     output = {"comments":sum}
     if sum != 0:
-      for attr in stats:
-        dict = {
-          'avg':mean(stats[attr]),
-          'median':median(stats[attr])
-          }
+        for attr in stats:
+            dict = {
+            'avg':mean(stats[attr]),
+            'median':median(stats[attr])
+            }
         output[attr] = dict
     return output
 
