@@ -35,13 +35,14 @@ allStoryUrls = []
 
 def sentiment(event, context):
     tag_event('comment-analyst', 'sentiment')
+    phrase = event.get('queryStringParameters', {}).get('phrase')
     headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": True
     }
 
     try:
-        body = run(pharse)
+        body = run(phrase)
     except Exception as exc:
         body = {"error", str(exc)}
 
@@ -56,7 +57,7 @@ def sentiment(event, context):
     return response
 
 
-def run(pharse):
+def run(phrase):
     url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
     results = loop.run_until_complete(fetch_url(url))
     storyIdList = response.json()
