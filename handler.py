@@ -2,8 +2,8 @@ import json
 from serverless_sdk import tag_event
 from statistics import mean, median
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-import aiohttp
 import asyncio
+import aiohttp
 
 querystring = {"print": "pretty"}
 
