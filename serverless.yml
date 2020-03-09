@@ -14,7 +14,7 @@ functions:
 provider:
   name: aws
   timeout: 120
-  runtime: python3.8
+  runtime: python3.7
 
 plugins:
   - serverless-python-requirements
