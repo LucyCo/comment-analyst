@@ -44,7 +44,7 @@ def sentiment(event, context):
     try:
         body = run(phrase)
     except Exception as exc:
-        body = {"error", str(exc)}
+        body = {"error": str(exc)}
 
     if body is None:
         body = "Internal error!"
@@ -106,3 +106,4 @@ def getComments(commentIds):
     for comment in result:
         updateSentiments(comment["text"])
         getComments(comment["kids"])
+
