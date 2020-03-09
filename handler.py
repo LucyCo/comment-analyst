@@ -1,91 +1,102 @@
 import requests
 import json
-from serverless_sdk import tag_event
 from statistics import mean, median
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import aiohttp
+import asyncio
+
+querystring = {"print": "pretty"}
+
+headers = {
+    'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
+    'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
+}
+
+
+async def fetch_single_url(session, url):
+    async with session.get(url,data=querystring,headers=headers) as response:
+        return await response.text()
+
+
+async def fetch_urls(urls):
+    async with aiohttp.ClientSession() as session:
+        results = [await fetch_single_url(session, url) for url in urls]
+    return results
+
+
+loop = asyncio.get_event_loop()
 
 analyzer = SentimentIntensityAnalyzer()
 
-stats = {"positive":[],"negative":[],"neutral":[],"mixed":[]}
+stats = {"positive": [], "negative": [], "neutral": [], "mixed": []}
 
-querystring = {}
+allStoryUrls = []
 
-headers = {
-     'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
-     'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
-    }
 
 def sentiment(event, context):
-  tag_event('comment-analyst', 'sentiment')
-  phrase = event.get('queryStringParameters', {}).get('phrase')
+    tag_event('comment-analyst', 'sentiment')
+    headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": True
+    }
 
-  headers = {
-       "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Credentials": True
-  }
+    try:
+        body = run(pharse)
+    except Exception as exc:
+        body = {"error", str(exc)}
 
-  try:
-    body = run(phrase)
-  except Exception as exc:
-    body = {"error", str(exc)}
+    if body is None:
+        body = "Internal error!"
 
-  if body is None:
-    body = "Internal error!"
-
-  response = {
-      "statusCode": 200,
-       "headers": headers,
-       "body": json.dumps(body)
-  }
-  return response
+    response = {
+        "statusCode": 200,
+         "headers": headers,
+         "body": json.dumps(body)
+    }
+    return response
 
 
-def run(phrase):
-  url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
-  response = requests.request("GET", url, headers=headers, params=querystring)
+def run(pharse):
+    url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
+    results = loop.run_until_complete(fetch_url(url))
+    storyIdList = response.json()
 
-  #error check
-  if response.status_code >= 300 or response.status_code < 200:
-    print('Connection to Hacker News failed - error code', response.status_code)
+    for storyId in storyIdList:
+        allStoryUrls.append("https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json")
 
-  storyIdList = response.json()
+    results = loop.run_until_complete(fetch_urls(allStoryUrls))
 
-  for storyId in storyIdList:
-    url = "https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json"
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    story = response.json()
-    print(story.get("title"))
-    if story.get("title").find(phrase) != -1:
-      for commentId in story["kids"]:
-        commentTraverse(commentId)
+    for story in results:
+      if story.get("title").find(pharse) != -1 and story.get("kids") is not None:
+        getComments(story.get["kids"])
 
-  sum = len(stats["positive"])
-  output = {"comments":sum}
-  if sum != 0:
-    for attr in stats:
-      dict = {
-        'avg':mean(stats[attr]),
-        'median':median(stats[attr])
-      }
-      output[attr] = dict
-  return output
+    sum = len(stats["positive"])
+    output = {"comments":sum}
+    if sum != 0:
+      for attr in stats:
+        dict = {
+          'avg':mean(stats[attr]),
+          'median':median(stats[attr])
+          }
+        output[attr] = dict
+    return output
 
 
 def updateSentiments(text):
-  result = analyzer.polarity_scores(text)
-  stats["positive"].append(result["pos"])
-  stats["negative"].append(result["neg"])
-  stats["neutral"].append(result["neu"])
-  stats["mixed"].append(result["compound"])
+    result = analyzer.polarity_scores(text)
+    stats["positive"].append(result["pos"])
+    stats["negative"].append(result["neg"])
+    stats["neutral"].append(result["neu"])
+    stats["mixed"].append(result["compound"])
 
 
-def commentTraverse(commentId):
-  url = "https://community-hacker-news-v1.p.rapidapi.com/item/" + str(commentId) + ".json"
-  response = requests.request("GET", url, headers=headers, params=querystring)
-  comment = response.json()
-  kids = comment.get('kids')
-  if kids is None:
-    updateSentiments(str(comment.get('text')))
-    return
-  for kidId in comment["kids"]:
-    commentTraverse(kidId)
+def getComments(commentIds):
+    if commentIds == []:
+        return
+    commentUrls = [];
+    for commentId in commentIds:
+        commentUrls.append("https://community-hacker-news-v1.p.rapidapi.com/item/" + str(commentId) + ".json")
+    result = fetch_urls(commentUrls)
+    for comment in result:
+        updateSentiments(comment["text"])
+        getComments(comment["kids"])
