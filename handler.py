@@ -58,9 +58,10 @@ def sentiment(event, context):
 
 
 def run(phrase):
-    url = "https://community-hacker-news-v1.p.rapidapi.com/topstories.json"
-    results = loop.run_until_complete(fetch_single_url(url))
-    storyIdList = response.json()
+    urls = []
+    urls.append("https://community-hacker-news-v1.p.rapidapi.com/topstories.json")
+    results = loop.run_until_complete(fetch_urls(urls))
+    storyIdList = results[0]
 
     for storyId in storyIdList:
         allStoryUrls.append("https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json")
