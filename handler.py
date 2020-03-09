@@ -1,5 +1,5 @@
-import requests
 import json
+from serverless_sdk import tag_event
 from statistics import mean, median
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import aiohttp
@@ -66,9 +66,14 @@ def run(pharse):
 
     results = loop.run_until_complete(fetch_urls(allStoryUrls))
 
+    allDirectStoryKidsId = [];
+
     for story in results:
       if story.get("title").find(pharse) != -1 and story.get("kids") is not None:
-        getComments(story.get["kids"])
+          for commentId in story.get("kids"):
+            allDirectStoryKidsId.append(commentId)
+
+    getComments(allDirectStoryKidsId)
 
     sum = len(stats["positive"])
     output = {"comments":sum}
