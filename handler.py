@@ -6,13 +6,15 @@ import concurrent.futures
 import requests
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-
 querystring = {"print": "pretty"}
 
 headers = {
     'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
     'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
 }
+
+def make_request(url):
+    return requests.get(url, data=querystring, headers=headers)
 
 async def fetch_all(urls):
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
@@ -21,7 +23,7 @@ async def fetch_all(urls):
         futures = [
             loop.run_in_executor(
                 executor,
-                requests.get(url,data=querystring,headers=headers),
+                make_request(url),
                 url
             )
             for url in urls
@@ -129,3 +131,4 @@ def getComments(commentIds):
         getComments(comment["kids"])
 
 # print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
+
