@@ -2,7 +2,6 @@ import json
 from serverless_sdk import tag_event
 from statistics import mean, median
 import asyncio
-import concurrent.futures
 import requests
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
@@ -14,10 +13,10 @@ headers = {
 }
 
 def make_request(url):
-    return requests.get(url, headers=headers)
+    return requests.get(url, data=querystring, headers=headers)
 
 async def fetch_all(urls):
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
+    with ThreadPoolExecutor(max_workers=len(urls)) as executor:
         print(urls)
         loop = asyncio.get_event_loop()
         futures = [
@@ -40,16 +39,6 @@ async def fetch_all(urls):
 
 loop = asyncio.get_event_loop()
 
-# async def fetch_single_url(url):
-#     response = loop.run_in_executor(None, requests.get, url)
-#     return await response.text()
-
-
-# async def fetch_urls(urls):
-#     async with aiohttp.ClientSession() as session:
-#         results = [await fetch_single_url(session, url) for url in urls]
-#     return results
-
 analyzer = SentimentIntensityAnalyzer()
 
 stats = {"positive": [], "negative": [], "neutral": [], "mixed": []}
@@ -58,7 +47,7 @@ allStoryUrls = []
 
 
 def sentiment(event, context):
-    #tag_event('comment-analyst', 'sentiment')
+    tag_event('comment-analyst', 'sentiment')
     phrase = event.get('queryStringParameters', {}).get('phrase')
     headers = {
         "Access-Control-Allow-Origin": "*",
@@ -87,14 +76,10 @@ def run(phrase):
     results = loop.run_until_complete(fetch_all(urls))
     print("hi")
     print(results)
-    #return(results) # todo
     storyIdList = results[0]
-    print("storyIdList")
-    print (storyIdList)
 
 
     for storyId in storyIdList:
-        print("storyId: " + storyId)
         allStoryUrls.append("https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json")
 
     results = loop.run_until_complete(fetch_all(allStoryUrls))
@@ -140,5 +125,5 @@ def getComments(commentIds):
         updateSentiments(comment["text"])
         getComments(comment["kids"])
 
-#print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
+# print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
 
