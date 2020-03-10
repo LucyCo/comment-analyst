@@ -1,5 +1,6 @@
+from pprint import pprint
 import json
-from serverless_sdk import tag_event
+#from serverless_sdk import tag_event
 from statistics import mean, median
 import asyncio
 import requests
@@ -9,7 +10,10 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 querystring = {"print": "pretty"}
 
 def make_request(url):
-    return requests.get(url, data=querystring)
+    try:
+        return requests.get(url, data=querystring)
+    except:
+        return None
 
 async def fetch_all(urls):
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
@@ -43,7 +47,7 @@ allStoryUrls = []
 
 
 def sentiment(event, context):
-    tag_event('comment-analyst', 'sentiment')
+    #tag_event('comment-analyst', 'sentiment')
     phrase = event.get('queryStringParameters', {}).get('phrase')
     headers = {
         "Access-Control-Allow-Origin": "*",
@@ -80,6 +84,8 @@ def run(phrase):
 
     results = loop.run_until_complete(fetch_all(allStoryUrls))
 
+    pprint('results')
+    pprint(results)
     allDirectStoryKidsId = [];
 
     for story in results:
@@ -121,4 +127,4 @@ def getComments(commentIds):
         updateSentiments(comment["text"])
         getComments(comment["kids"])
 
-# print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
+print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
