@@ -72,9 +72,6 @@ def sentiment(event, context):
     except Exception as exc:
         body = {"error": str(exc)}
 
-    if body is None:
-        body = "Internal error!"
-
     response = {
         "statusCode": 200,
          "headers": headers,
