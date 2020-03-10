@@ -28,8 +28,14 @@ async def fetch_all(urls):
             )
             for url in urls
         ]
+        responses = []
         for response in await asyncio.gather(*futures):
-            pass
+            try:
+                res = response.json()
+            except:
+                continue
+            responses.append(res)
+    return responses
 
 
 loop = asyncio.get_event_loop()
@@ -52,7 +58,7 @@ allStoryUrls = []
 
 
 def sentiment(event, context):
-    tag_event('comment-analyst', 'sentiment')
+    #tag_event('comment-analyst', 'sentiment')
     phrase = event.get('queryStringParameters', {}).get('phrase')
     headers = {
         "Access-Control-Allow-Origin": "*",
@@ -81,10 +87,14 @@ def run(phrase):
     results = loop.run_until_complete(fetch_all(urls))
     print("hi")
     print(results)
+    #return(results) # todo
     storyIdList = results[0]
+    print("storyIdList")
+    print (storyIdList)
 
 
     for storyId in storyIdList:
+        print("storyId: " + storyId)
         allStoryUrls.append("https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json")
 
     results = loop.run_until_complete(fetch_all(allStoryUrls))
@@ -130,5 +140,5 @@ def getComments(commentIds):
         updateSentiments(comment["text"])
         getComments(comment["kids"])
 
-# print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
+#print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
 
