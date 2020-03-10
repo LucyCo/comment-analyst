@@ -1,16 +1,20 @@
 import json
-#from serverless_sdk import tag_event
+from serverless_sdk import tag_event
 from statistics import mean, median
 import asyncio
 import requests
 import concurrent.futures
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import traceback
+from datetime import datetime
 
 querystring = {"print": "pretty"}
 
+timestamp = datetime.timestamp(datetime.now())
 
 def make_request(url):
+    if datetime.timestamp(datetime.now()) > timestamp + 25:
+        return None
     try:
         return requests.get(url, data=querystring)
     except:
@@ -48,7 +52,7 @@ allStoryUrls = []
 
 
 def sentiment(event, context):
-    #tag_event('comment-analyst', 'sentiment')
+    tag_event('comment-analyst', 'sentiment')
     phrase = event.get('queryStringParameters', {}).get('phrase', '').lower()
     headers = {
         "Access-Control-Allow-Origin": "*",
@@ -128,4 +132,4 @@ def getComments(commentIds):
         updateSentiments(comment.get("text"))
         getComments(comment.get("kids", []))
 
-#print(sentiment({"queryStringParameters": {"phrase": "shading"}}, None))
+# print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
