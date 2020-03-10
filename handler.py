@@ -46,7 +46,8 @@ async def fetch_all(urls):
                 make_request,
                 url
             )
-            for url in urls
+            for url
+            in urls
         ]
         responses = []
         for response in await asyncio.gather(*futures):
