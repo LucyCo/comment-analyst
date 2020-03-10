@@ -11,7 +11,7 @@ handler.py event function resposible for running the logic behind
 # Usage
 Example: https://nnccmexb6l.execute-api.us-east-1.amazonaws.com/dev/sentiment?phrase=down
 where sentiment is the called function
-phrase is the text to be searched in titles -
+phrase is the text to be searched in titles
 
 # Requirements
 requests
@@ -21,7 +21,9 @@ vaderSentiment.vaderSentiment
 statistics
 
 # About the assignment
-I decided to use python since it's usage as serverside and with json is straightforward
-I used an online dev environment repl.it to develop and test each function, it can run server requests
-I decided not to implement the sentiment calculator by myself and used vaderSentiment library
-I used the mean and median functions in statistics library to calculate avg and median values
+According to the assignment requirements the main language that was used is python3(.7) - due to straightforward serverside implementation
+For initial development an online dev environment was used (repl.it) to develop and test each function, it can run server requests
+Requirements and serverless-python-rquirements were installed on a personal virtual environment for contiuous development and testing and for creating requirements.txt and package.json
+For the sentiment stats a 3rd party library named 'vaderSentiment' was used
+For parallel get requests the python library asyncio was used
+For timeout handling the datetime.timestamp was used - the process returns results returned until timeout deadline
