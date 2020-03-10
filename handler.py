@@ -99,8 +99,8 @@ def run(phrase):
     if sum != 0:
         for attr in stats:
             dict = {
-            'avg':mean(stats[attr]),
-            'median':median(stats[attr])
+            'avg':"%.3f" % mean(stats[attr]),
+            'median':"%.3f" % median(stats[attr])
             }
             output[attr] = dict
     return output
