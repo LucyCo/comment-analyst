@@ -1,10 +1,11 @@
 import json
-# from serverless_sdk import tag_event
+from serverless_sdk import tag_event
 from statistics import mean, median
 import asyncio
 import requests
 import concurrent.futures
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import traceback
 
 querystring = {"print": "pretty"}
 
@@ -47,7 +48,7 @@ allStoryUrls = []
 
 
 def sentiment(event, context):
-    # tag_event('comment-analyst', 'sentiment')
+    tag_event('comment-analyst', 'sentiment')
     phrase = event.get('queryStringParameters', {}).get('phrase')
     headers = {
         "Access-Control-Allow-Origin": "*",
@@ -57,7 +58,7 @@ def sentiment(event, context):
     try:
         body = run(phrase)
     except Exception as exc:
-        body = {"error": str(exc)}
+        body = {"error": str(exc), "error_traceback": repr(traceback.print_stack())}
 
     if body is None:
         body = "Internal error!"
@@ -89,11 +90,11 @@ def run(phrase):
     for story in results:
         print(story.get("title"))
         if story.get("title").find(phrase) != -1 and story.get("kids") is not None:
-            for commentId in story.get("kids"):
+            for commentId in story.get("kids", []):
                 allDirectStoryKidsId.append(commentId)
 
     getComments(allDirectStoryKidsId)
- 
+
     sum = len(stats["positive"])
     output = {"comments":sum}
     if sum != 0:
@@ -107,6 +108,8 @@ def run(phrase):
 
 
 def updateSentiments(text):
+    if not text:
+        return
     result = analyzer.polarity_scores(text)
     stats["positive"].append(result["pos"])
     stats["negative"].append(result["neg"])
@@ -115,14 +118,14 @@ def updateSentiments(text):
 
 
 def getComments(commentIds):
-    if commentIds == []:
+    if not commentIds:
         return
     commentUrls = [];
     for commentId in commentIds:
         commentUrls.append("https://hacker-news.firebaseio.com/v0/item/" + str(commentId) + ".json")
     result = loop.run_until_complete(fetch_all(commentUrls))
     for comment in result:
-        updateSentiments(comment["text"])
-        getComments(comment["kids"])
+        updateSentiments(comment.get("text"))
+        getComments(comment.get("kids", []))
 
-# print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
+# print(sentiment({"queryStringParameters": {"phrase": "password"}}, None))
