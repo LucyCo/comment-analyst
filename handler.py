@@ -9,12 +9,6 @@ from datetime import datetime
 
 TIMEOUT_SECONDS = 25
 
-timestamp = datetime.timestamp(datetime.now())
-
-loop = asyncio.get_event_loop()
-
-analyzer = SentimentIntensityAnalyzer()
-
 GET_QUERY = event.get('queryStringParameters', {}).get('phrase', '').lower()
 
 HACKER_NEWS_PREFIX = "https://hacker-news.firebaseio.com/v0/"
@@ -24,6 +18,12 @@ HACKER_NEWS_ITEM_PATH = "item/"
 TOP_STORIES = "topstories"
 
 JSON_SUFFIX = ".json"
+
+timestamp = datetime.timestamp(datetime.now())
+
+loop = asyncio.get_event_loop()
+
+analyzer = SentimentIntensityAnalyzer()
 
 stats = {"positive": [], "negative": [], "neutral": [], "mixed": []}
 
