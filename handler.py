@@ -3,20 +3,16 @@ from serverless_sdk import tag_event
 from statistics import mean, median
 import asyncio
 import requests
+import concurrent.futures
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 querystring = {"print": "pretty"}
 
-headers = {
-    'x-rapidapi-host': "community-hacker-news-v1.p.rapidapi.com",
-    'x-rapidapi-key': "70a9a1e646mshfbe352366d4e248p1026d2jsn434e37469a13"
-}
-
 def make_request(url):
-    return requests.get(url, data=querystring, headers=headers)
+    return requests.get(url, data=querystring)
 
 async def fetch_all(urls):
-    with ThreadPoolExecutor(max_workers=len(urls)) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
         print(urls)
         loop = asyncio.get_event_loop()
         futures = [
@@ -72,7 +68,7 @@ def sentiment(event, context):
 
 def run(phrase):
     urls = []
-    urls.append("https://community-hacker-news-v1.p.rapidapi.com/topstories.json")
+    urls.append("https://hacker-news.firebaseio.com/v0/topstories.json")
     results = loop.run_until_complete(fetch_all(urls))
     print("hi")
     print(results)
@@ -80,7 +76,7 @@ def run(phrase):
 
 
     for storyId in storyIdList:
-        allStoryUrls.append("https://community-hacker-news-v1.p.rapidapi.com/item/" + str(storyId) + ".json")
+        allStoryUrls.append("https://hacker-news.firebaseio.com/v0/item/" + str(storyId) + ".json")
 
     results = loop.run_until_complete(fetch_all(allStoryUrls))
 
@@ -119,11 +115,10 @@ def getComments(commentIds):
         return
     commentUrls = [];
     for commentId in commentIds:
-        commentUrls.append("https://community-hacker-news-v1.p.rapidapi.com/item/" + str(commentId) + ".json")
+        commentUrls.append("https://hacker-news.firebaseio.com/v0/item/" + str(commentId) + ".json")
     result = fetch_all(commentUrls)
     for comment in result:
         updateSentiments(comment["text"])
         getComments(comment["kids"])
 
 # print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
-
