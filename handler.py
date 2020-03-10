@@ -48,6 +48,7 @@ allStoryUrls = []
 def make_request(url):
     if datetime.timestamp(datetime.now()) > timestamp + TIMEOUT_SECONDS:
         return None
+    
     try:
         return requests.get(url)
     except:
@@ -56,22 +57,27 @@ def make_request(url):
 async def fetch_all(urls):
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
         loop = asyncio.get_event_loop()
+        
         futures = [
             loop.run_in_executor(
                 executor,
                 make_request,
                 url
             )
+            
             for url
             in urls
         ]
         responses = []
+        
         for response in await asyncio.gather(*futures):
             try:
                 res = response.json()
             except:
                 continue
+                
             responses.append(res)
+            
     return responses
 
 
@@ -93,6 +99,7 @@ def sentiment(event, context):
          "headers": headers,
          "body": json.dumps(body)
     }
+    
     return response
 
 
@@ -101,7 +108,6 @@ def run(phrase):
     urls.append(HACKER_NEWS_PREFIX + HACKER_NEWS_TOP_STORIES + JSON_SUFFIX)
     results = loop.run_until_complete(fetch_all(urls))
     story_id_list = results[0]
-
 
     for story_id in story_id_list:
         all_story_urls.append(get_url_from_id(story_id))
@@ -119,19 +125,22 @@ def run(phrase):
 
     sum = len(stats[SENTIMENT_POS])
     output = {STATS_COMMENTS:sum}
+    
     if sum != 0:
         for attr in stats:
-            dict = {
-            STATS_AVG:"%.3f" % mean(stats[attr]),
-            STATS_MED:"%.3f" % median(stats[attr])
+            data = {
+                STATS_AVG: "%.3f" % mean(stats[attr]),
+                STATS_MED: "%.3f" % median(stats[attr])
             }
-            output[attr] = dict
+            output[attr] = data
+            
     return output
 
 
 def update_sentiments(text):
     if not text:
         return
+    
     result = analyzer.polarity_scores(text)
     stats[SENTIMENT_POS].append(result[VADER_POS])
     stats[SENTIMENT_NEG].append(result[VADER_NEG])
@@ -145,8 +154,10 @@ def get_url_from_id(id):
 def get_comments(comment_ids):
     if not comment_ids:
         return
+    
     comment_urls = [get_url_from_id(comment_id) for comment_id in comment_ids]
     result = loop.run_until_complete(fetch_all(comment_urls))
+    
     for comment in result:
         update_sentiments(comment.get(HACKER_NEWS_TEXT))
         get_comments(comment.get(HACKER_NEWS_KIDS, []))
