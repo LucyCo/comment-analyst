@@ -5,7 +5,6 @@ import asyncio
 import requests
 import concurrent.futures
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-import traceback
 from datetime import datetime
 
 querystring = {"print": "pretty"}
@@ -22,7 +21,6 @@ def make_request(url):
 
 async def fetch_all(urls):
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
-        print(urls)
         loop = asyncio.get_event_loop()
         futures = [
             loop.run_in_executor(
@@ -62,7 +60,7 @@ def sentiment(event, context):
     try:
         body = run(phrase)
     except Exception as exc:
-        body = {"error": str(exc), "error_traceback": repr(traceback.print_stack())}
+        body = {"error": str(exc)}
 
     if body is None:
         body = "Internal error!"
@@ -79,8 +77,6 @@ def run(phrase):
     urls = []
     urls.append("https://hacker-news.firebaseio.com/v0/topstories.json")
     results = loop.run_until_complete(fetch_all(urls))
-    print("hi")
-    print(results)
     storyIdList = results[0]
 
 
@@ -92,7 +88,6 @@ def run(phrase):
     allDirectStoryKidsId = [];
 
     for story in results:
-        print(story.get("title"))
         if story.get("title").lower().find(phrase) != -1 and story.get("kids") is not None:
             for commentId in story.get("kids", []):
                 allDirectStoryKidsId.append(commentId)
@@ -107,7 +102,7 @@ def run(phrase):
             'avg':mean(stats[attr]),
             'median':median(stats[attr])
             }
-        output[attr] = dict
+            output[attr] = dict
     return output
 
 
