@@ -90,22 +90,22 @@ def run(phrase):
     urls = []
     urls.append(HACKER_NEWS_PREFIX + TOP_STORIES + JSON_SUFFIX)
     results = loop.run_until_complete(fetch_all(urls))
-    storyIdList = results[0]
+    story_id_list = results[0]
 
 
-    for storyId in storyIdList:
-        allStoryUrls.append(HACKER_NEWS_PREFIX + HACKER_NEWS_ITEM_PREFIX + str(storyId) + JSON_SUFFIX)
+    for story_id in story_id_list:
+        all_story_urls.append(get_url_from_id(story_id))
 
-    results = loop.run_until_complete(fetch_all(allStoryUrls))
+    results = loop.run_until_complete(fetch_all(all_story_urls))
 
-    allDirectStoryKidsId = [];
+    all_direct_story_kids_id = [];
 
     for story in results:
         if story.get(TITLE).lower().find(phrase) != -1 and story.get(KIDS) is not None:
-            for commentId in story.get(KIDS, []):
-                allDirectStoryKidsId.append(commentId)
+            for comment_id in story.get(KIDS, []):
+                all_direct_story_kids_id.append(comment_id)
 
-    getComments(allDirectStoryKidsId)
+    get_comments(all_direct_story_kids_id)
 
     sum = len(stats["positive"])
     output = {"comments":sum}
@@ -119,7 +119,7 @@ def run(phrase):
     return output
 
 
-def updateSentiments(text):
+def update_sentiments(text):
     if not text:
         return
     result = analyzer.polarity_scores(text)
@@ -128,14 +128,17 @@ def updateSentiments(text):
     stats["neutral"].append(result["neu"])
     stats["mixed"].append(result["compound"])
 
+def get_url_from_id(id):
+    return HACKER_NEWS_PREFIX + HACKER_NEWS_ITEM_PATH + str(id) + JSON_SUFFIX
 
-def getComments(commentIds):
-    if not commentIds:
+
+def get_comments(comment_ids):
+    if not comment_ids:
         return
-    commentUrls = [];
-    for commentId in commentIds:
-        commentUrls.append(HACKER_NEWS_PREFIX + HACKER_NEWS_ITEM_PATH + str(commentId) + JSON_SUFFIX)
-    result = loop.run_until_complete(fetch_all(commentUrls))
+    comment_urls = [];
+    for comment_id in comment_ids:
+        comment_urls.append(get_url_from_id(commentId))
+    result = loop.run_until_complete(fetch_all(comment_urls))
     for comment in result:
-        updateSentiments(comment.get(TEXT))
-        getComments(comment.get(KIDS, []))
+        update_sentiments(comment.get(TEXT))
+        get_comments(comment.get(KIDS, []))
