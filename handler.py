@@ -9,7 +9,11 @@ from datetime import datetime
 
 TIMEOUT_SECONDS = 25
 
-GET_QUERY = event.get('queryStringParameters', {}).get('phrase', '').lower()
+QUERY_STR_PARAMS = "queryStringParameters"
+QUERY_PHRASE = "phrase"
+
+SERVERLESS_TAG_1 = "comment-analyst"
+SERVERLESS_TAG_2 = "sentiment"
 
 HACKER_NEWS_PREFIX = "https://hacker-news.firebaseio.com/v0/"
 HACKER_NEWS_ITEM_PATH = "item/"
@@ -80,10 +84,13 @@ async def fetch_all(urls):
 
     return responses
 
+def get_query_params(event):
+    return event.get(QUERY_STR_PARAMS, {}).get(QUERY_PHRASE, '').lower()
+
 
 def sentiment(event, context):
-    tag_event('comment-analyst', 'sentiment')
-    phrase = GET_QUERY
+    tag_event(SERVERLESS_TAG_1, SERVERLESS_TAG_2)
+    phrase = get_query_params(event)
     headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": True
