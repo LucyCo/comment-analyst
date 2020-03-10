@@ -145,9 +145,7 @@ def get_url_from_id(id):
 def get_comments(comment_ids):
     if not comment_ids:
         return
-    comment_urls = [];
-    for comment_id in comment_ids:
-        comment_urls.append(get_url_from_id(comment_id))
+    comment_urls = [get_url_from_id(comment_id) for comment_id in comment_ids]
     result = loop.run_until_complete(fetch_all(comment_urls))
     for comment in result:
         update_sentiments(comment.get(HACKER_NEWS_TEXT))
