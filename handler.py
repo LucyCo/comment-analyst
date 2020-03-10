@@ -9,6 +9,10 @@ from datetime import datetime
 
 TIMEOUT_SECONDS = 25
 
+STATUS_CODE_SUCCESS = 200
+STATUS_CODE_PART = 416
+STATUS_CODE_FAILED = 500
+
 QUERY_STR_PARAMS = "queryStringParameters"
 QUERY_PHRASE = "phrase"
 
@@ -96,13 +100,19 @@ def sentiment(event, context):
         "Access-Control-Allow-Credentials": True
     }
 
+    status_code = STATUS_CODE_SUCCESS
+
     try:
         body = run(phrase)
     except Exception as exc:
-        body = {"error": str(exc)}
+        if not body:
+            body = {"error": str(exc)}
+            status_code = STATUS_CODE_FAILED
+        else:
+            status_code = STATUS_CODE_PART
 
     response = {
-        "statusCode": 200,
+        "statusCode": status_code,
          "headers": headers,
          "body": json.dumps(body)
     }
