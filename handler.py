@@ -7,15 +7,33 @@ import concurrent.futures
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from datetime import datetime
 
-querystring = {"print": "pretty"}
+TIMEOUT_SECONDS = 25
 
 timestamp = datetime.timestamp(datetime.now())
 
+loop = asyncio.get_event_loop()
+
+analyzer = SentimentIntensityAnalyzer()
+
+GET_QUERY = event.get('queryStringParameters', {}).get('phrase', '').lower()
+
+HACKER_NEWS_PREFIX = "https://hacker-news.firebaseio.com/v0/"
+
+HACKER_NEWS_ITEM_PATH = "item/"
+
+TOP_STORIES = "topstories"
+
+JSON_SUFFIX = ".json"
+
+stats = {"positive": [], "negative": [], "neutral": [], "mixed": []}
+
+allStoryUrls = []
+
 def make_request(url):
-    if datetime.timestamp(datetime.now()) > timestamp + 25:
+    if datetime.timestamp(datetime.now()) > timestamp + TIMEOUT_SECONDS:
         return None
     try:
-        return requests.get(url, data=querystring)
+        return requests.get(url)
     except:
         return None
 
@@ -40,18 +58,9 @@ async def fetch_all(urls):
     return responses
 
 
-loop = asyncio.get_event_loop()
-
-analyzer = SentimentIntensityAnalyzer()
-
-stats = {"positive": [], "negative": [], "neutral": [], "mixed": []}
-
-allStoryUrls = []
-
-
 def sentiment(event, context):
     tag_event('comment-analyst', 'sentiment')
-    phrase = event.get('queryStringParameters', {}).get('phrase', '').lower()
+    phrase = GET_QUERY
     headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": True
@@ -75,13 +84,13 @@ def sentiment(event, context):
 
 def run(phrase):
     urls = []
-    urls.append("https://hacker-news.firebaseio.com/v0/topstories.json")
+    urls.append(HACKER_NEWS_PREFIX + TOP_STORIES + JSON_SUFFIX)
     results = loop.run_until_complete(fetch_all(urls))
     storyIdList = results[0]
 
 
     for storyId in storyIdList:
-        allStoryUrls.append("https://hacker-news.firebaseio.com/v0/item/" + str(storyId) + ".json")
+        allStoryUrls.append(HACKER_NEWS_PREFIX + HACKER_NEWS_ITEM_PREFIX + str(storyId) + JSON_SUFFIX)
 
     results = loop.run_until_complete(fetch_all(allStoryUrls))
 
@@ -121,10 +130,8 @@ def getComments(commentIds):
         return
     commentUrls = [];
     for commentId in commentIds:
-        commentUrls.append("https://hacker-news.firebaseio.com/v0/item/" + str(commentId) + ".json")
+        commentUrls.append(HACKER_NEWS_PREFIX + HACKER_NEWS_ITEM_PATH + str(commentId) + JSON_SUFFIX)
     result = loop.run_until_complete(fetch_all(commentUrls))
     for comment in result:
         updateSentiments(comment.get("text"))
         getComments(comment.get("kids", []))
-
-# print(sentiment({"queryStringParameters": {"phrase": "corona"}}, None))
