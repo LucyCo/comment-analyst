@@ -19,6 +19,12 @@ TOP_STORIES = "topstories"
 
 JSON_SUFFIX = ".json"
 
+TITLE = "title"
+
+KIDS = "kids"
+
+TEXT = "text"
+
 timestamp = datetime.timestamp(datetime.now())
 
 loop = asyncio.get_event_loop()
@@ -95,8 +101,8 @@ def run(phrase):
     allDirectStoryKidsId = [];
 
     for story in results:
-        if story.get("title").lower().find(phrase) != -1 and story.get("kids") is not None:
-            for commentId in story.get("kids", []):
+        if story.get(TITLE).lower().find(phrase) != -1 and story.get(KIDS) is not None:
+            for commentId in story.get(KIDS, []):
                 allDirectStoryKidsId.append(commentId)
 
     getComments(allDirectStoryKidsId)
@@ -131,5 +137,5 @@ def getComments(commentIds):
         commentUrls.append(HACKER_NEWS_PREFIX + HACKER_NEWS_ITEM_PATH + str(commentId) + JSON_SUFFIX)
     result = loop.run_until_complete(fetch_all(commentUrls))
     for comment in result:
-        updateSentiments(comment.get("text"))
-        getComments(comment.get("kids", []))
+        updateSentiments(comment.get(TEXT))
+        getComments(comment.get(KIDS, []))
