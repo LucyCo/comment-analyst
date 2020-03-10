@@ -14,7 +14,7 @@ headers = {
 }
 
 def make_request(url):
-    return requests.get(url, data=querystring, headers=headers)
+    return requests.get(url, headers=headers)
 
 async def fetch_all(urls):
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
