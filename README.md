@@ -15,10 +15,10 @@ phrase is the text to be searched in titles -
 
 # Requirements
 requests
-json
-serverless_sdk
-statistics
+
 vaderSentiment.vaderSentiment
+
+statistics
 
 # About the assignment
 I decided to use python since it's usage as serverside and with json is straightforward
