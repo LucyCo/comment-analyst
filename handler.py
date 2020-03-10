@@ -1,5 +1,5 @@
 import json
-from serverless_sdk import tag_event
+#from serverless_sdk import tag_event
 from statistics import mean, median
 import asyncio
 import requests
@@ -48,8 +48,8 @@ allStoryUrls = []
 
 
 def sentiment(event, context):
-    tag_event('comment-analyst', 'sentiment')
-    phrase = event.get('queryStringParameters', {}).get('phrase')
+    #tag_event('comment-analyst', 'sentiment')
+    phrase = event.get('queryStringParameters', {}).get('phrase', '').lower()
     headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": True
@@ -89,7 +89,7 @@ def run(phrase):
 
     for story in results:
         print(story.get("title"))
-        if story.get("title").find(phrase) != -1 and story.get("kids") is not None:
+        if story.get("title").lower().find(phrase) != -1 and story.get("kids") is not None:
             for commentId in story.get("kids", []):
                 allDirectStoryKidsId.append(commentId)
 
@@ -128,4 +128,4 @@ def getComments(commentIds):
         updateSentiments(comment.get("text"))
         getComments(comment.get("kids", []))
 
-# print(sentiment({"queryStringParameters": {"phrase": "password"}}, None))
+#print(sentiment({"queryStringParameters": {"phrase": "shading"}}, None))
