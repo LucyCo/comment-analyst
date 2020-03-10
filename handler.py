@@ -23,7 +23,7 @@ async def fetch_all(urls):
         futures = [
             loop.run_in_executor(
                 executor,
-                make_request(url),
+                make_request,
                 url
             )
             for url in urls
