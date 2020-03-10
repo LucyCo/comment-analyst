@@ -56,7 +56,7 @@ def sentiment(event, context):
     }
 
     try:
-        body = loop.run_until_complete(run(phrase))
+        body = run(phrase)
     except Exception as exc:
         body = {"error": str(exc), "error_traceback": repr(traceback.print_stack())}
 
@@ -93,9 +93,7 @@ def run(phrase):
             for commentId in story.get("kids", []):
                 allDirectStoryKidsId.append(commentId)
 
-    print("start")
-    loop.run_until_complete(asyncio.wait([asyncio.sleep(1), getComments(allDirectStoryKidsId)], return_when=asyncio.FIRST_COMPLETED))
-    print("end")
+    getComments(allDirectStoryKidsId)
 
     sum = len(stats["positive"])
     output = {"comments":sum}
@@ -119,7 +117,7 @@ def updateSentiments(text):
     stats["mixed"].append(result["compound"])
 
 
-async def getComments(commentIds):
+def getComments(commentIds):
     if not commentIds:
         return
     commentUrls = [];
@@ -130,4 +128,4 @@ async def getComments(commentIds):
         updateSentiments(comment.get("text"))
         getComments(comment.get("kids", []))
 
-print(sentiment({"queryStringParameters": {"phrase": "shading"}}, None))
+#print(sentiment({"queryStringParameters": {"phrase": "shading"}}, None))
