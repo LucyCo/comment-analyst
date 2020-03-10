@@ -1,5 +1,5 @@
 import json
-from serverless_sdk import tag_event
+# from serverless_sdk import tag_event
 from statistics import mean, median
 import asyncio
 import requests
@@ -47,7 +47,7 @@ allStoryUrls = []
 
 
 def sentiment(event, context):
-    tag_event('comment-analyst', 'sentiment')
+    # tag_event('comment-analyst', 'sentiment')
     phrase = event.get('queryStringParameters', {}).get('phrase')
     headers = {
         "Access-Control-Allow-Origin": "*",
@@ -93,7 +93,7 @@ def run(phrase):
                 allDirectStoryKidsId.append(commentId)
 
     getComments(allDirectStoryKidsId)
-
+ 
     sum = len(stats["positive"])
     output = {"comments":sum}
     if sum != 0:
@@ -120,7 +120,7 @@ def getComments(commentIds):
     commentUrls = [];
     for commentId in commentIds:
         commentUrls.append("https://hacker-news.firebaseio.com/v0/item/" + str(commentId) + ".json")
-    result = fetch_all(commentUrls)
+    result = loop.run_until_complete(fetch_all(commentUrls))
     for comment in result:
         updateSentiments(comment["text"])
         getComments(comment["kids"])
